@@ -13,6 +13,10 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  // Azure Translator key is supplied at build time, never committed:
+  // flutter run --dart-define=AZURE_TRANSLATOR_KEY=<your-key>
+  static const _translatorKey = String.fromEnvironment('AZURE_TRANSLATOR_KEY');
+
   Map<String, String> languageCodes = {
     'English': 'en',
     'Yoruba': 'yo', 
@@ -26,7 +30,7 @@ class _MainScreenState extends State<MainScreen> {
     var response = await http.post(
       url,
       headers: {
-        'Ocp-Apim-Subscription-Key': 'ece7cf4d4a78483289c547039707b434',
+        'Ocp-Apim-Subscription-Key': _translatorKey,
         'Ocp-Apim-Subscription-Region': 'global', 
         'Content-Type': 'application/json',
       },
@@ -54,14 +58,12 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: AvatarGlow(
-          endRadius: 100,
           animate: microphonepressed,
           duration: const Duration(
             milliseconds: 2000,
           ),
           glowColor: Colors.red,
-          repeatPauseDuration: const Duration(milliseconds: 100),
-          showTwoGlows: true,
+          glowCount: 2,
           child: GestureDetector(
               onTapDown: (details) async {
                 if (!microphonepressed) {
